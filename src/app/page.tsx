@@ -11,6 +11,7 @@ export default function Home() {
             <Button variant={"ghost"}>Click me</Button>
             <Button variant={"muted"}>Click me</Button>
             <Button variant={"tertiary"}>Click me</Button>
+
         </div>
     );
 }
