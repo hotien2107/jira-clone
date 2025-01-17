@@ -1,9 +1,8 @@
-import {InferRequestType, InferResponseType} from "hono";
+import {InferResponseType} from "hono";
 import {client} from "@/lib/rpc";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {useRouter} from "next/navigation";
 
-type RequestType = InferRequestType<typeof client.api.v1.auth.logout["$post"]>
 type ResponseType = InferResponseType<typeof client.api.v1.auth.logout["$post"]>
 
 export const useLogout = () => {

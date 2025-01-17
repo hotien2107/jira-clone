@@ -95,7 +95,7 @@ const SignInCard = () => {
                 <DottedSeparator/>
             </div>
             <CardContent className="p-7 text-center">
-                You don't have an account! <Link href={"/sign-up"} className="text-blue-700">Sign up</Link>
+                You don&apos;`t have an account! <Link href={"/sign-up"} className="text-blue-700">Sign up</Link>
             </CardContent>
         </Card>
     );
