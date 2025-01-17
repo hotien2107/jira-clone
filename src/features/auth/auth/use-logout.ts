@@ -3,21 +3,21 @@ import {client} from "@/lib/rpc";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {useRouter} from "next/navigation";
 
-type RequestType = InferRequestType<typeof client.api.v1.auth.login["$post"]>["json"]
-type ResponseType = InferResponseType<typeof client.api.v1.auth.login["$post"]>
+type RequestType = InferRequestType<typeof client.api.v1.auth.logout["$post"]>
+type ResponseType = InferResponseType<typeof client.api.v1.auth.logout["$post"]>
 
-export const useLogin = () => {
+export const useLogout = () => {
     const queryClient = useQueryClient()
     const router = useRouter()
-    return useMutation<ResponseType, Error, RequestType>(
+    return useMutation<ResponseType, Error>(
         {
             mutationFn: async (json) => {
-                const response = await client.api.v1.auth.login["$post"]({json});
+                const response = await client.api.v1.auth.logout["$post"]({json});
                 return await response.json()
             },
             onSuccess: () => {
-                queryClient.invalidateQueries({queryKey: ["user-info"]})
                 router.refresh()
+                queryClient.invalidateQueries({queryKey: ["user-info"]})
             }
         }
     )

@@ -15,8 +15,15 @@ const app = new Hono()
         async (c) => {
             const {email, password} = c.req.valid("json")
             const {account} = await createAdminClient()
-            await account.get()
-            return c.json({"email": email, password: password});
+            const session = await account.createEmailPasswordSession(email, password)
+            setCookie(c, AUTH_COOKIE_NAME, session.secret, {
+                path: "/",
+                httpOnly: true,
+                secure: true,
+                sameSite: "strict",
+                maxAge: 60 * 60 * 24 * 30
+            })
+            return c.json({success: true});
         }
     )
     .post("/register",
@@ -41,7 +48,6 @@ const app = new Hono()
             const account = c.get("account")
             deleteCookie(c, AUTH_COOKIE_NAME)
             await account.deleteSession("current ")
-
             return c.json({success: true});
         })
     .get("/user-info", sessionMiddleware,

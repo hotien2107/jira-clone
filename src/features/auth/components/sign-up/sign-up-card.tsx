@@ -11,17 +11,19 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Form, FormControl, FormField, FormItem, FormMessage} from "@/components/ui/form";
 import {registerSchema} from "@/features/auth/schemas";
+import {useRegister} from "@/features/auth/auth/use-register";
 
 type FormType = z.infer<typeof registerSchema>
 
 const SignUpCard = () => {
+    const {mutate} = useRegister()
     const form = useForm<FormType>({
         defaultValues: {email: "", password: "", name: ""},
         resolver: zodResolver(registerSchema)
     })
 
     const onSubmit = (value: FormType) => {
-        console.log(value)
+        mutate(value)
     }
 
     return (
@@ -89,7 +91,7 @@ const SignUpCard = () => {
                             )}
                         />
                         <Button size="lg" className="w-full">
-                            Login
+                            Register
                         </Button>
                     </form>
                 </Form>
