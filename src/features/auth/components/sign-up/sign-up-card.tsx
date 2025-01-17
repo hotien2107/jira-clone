@@ -16,7 +16,7 @@ import {useRegister} from "@/features/auth/auth/use-register";
 type FormType = z.infer<typeof registerSchema>
 
 const SignUpCard = () => {
-    const {mutate} = useRegister()
+    const {mutate, isPending} = useRegister()
     const form = useForm<FormType>({
         defaultValues: {email: "", password: "", name: ""},
         resolver: zodResolver(registerSchema)
@@ -90,7 +90,7 @@ const SignUpCard = () => {
                                 </FormItem>
                             )}
                         />
-                        <Button size="lg" className="w-full">
+                        <Button disabled={isPending} size="lg" className="w-full">
                             Register
                         </Button>
                     </form>
@@ -100,11 +100,11 @@ const SignUpCard = () => {
                 <DottedSeparator/>
             </div>
             <CardContent className="p-7 flex flex-col gap-y-4">
-                <Button variant="secondary" size="lg" className="w-full">
+                <Button disabled={isPending} variant="secondary" size="lg" className="w-full">
                     <FcGoogle className="mr-2"/>
                     Login with Google
                 </Button>
-                <Button variant="secondary" size="lg" className="w-full">
+                <Button disabled={isPending} variant="secondary" size="lg" className="w-full">
                     <FaGithub className="mr-2"/>
                     Login with Github
                 </Button>
