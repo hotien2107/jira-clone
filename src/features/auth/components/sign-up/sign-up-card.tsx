@@ -11,7 +11,7 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Form, FormControl, FormField, FormItem, FormMessage} from "@/components/ui/form";
 import {registerSchema} from "@/features/auth/schemas";
-import {useRegister} from "@/features/auth/auth/use-register";
+import {useRegister} from "@/features/auth/api/use-register";
 
 type FormType = z.infer<typeof registerSchema>
 
