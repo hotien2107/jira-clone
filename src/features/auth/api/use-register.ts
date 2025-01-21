@@ -1,5 +1,5 @@
 import {client} from "@/lib/rpc";
-import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {useMutation} from "@tanstack/react-query";
 import {InferRequestType, InferResponseType} from "hono";
 import {useRouter} from "next/navigation";
 
@@ -8,7 +8,6 @@ type ResponseType = InferResponseType<typeof client.api.v1.auth.register["$post"
 
 
 export const useRegister = () => {
-    const queryClient = useQueryClient()
     const router = useRouter()
     return useMutation<ResponseType, Error, RequestType>(
         {
