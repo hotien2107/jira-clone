@@ -21,8 +21,8 @@ const UserButton = () => {
     }
     if (!user) return null
 
-    const {name, email} = user
-    const avatarFallback = name ? name.charAt(0).toUpperCase() : email.charAt(0).toUpperCase() ?? "A"
+    const {username, email} = user
+    const avatarFallback = username ? username.charAt(0).toUpperCase() : email.charAt(0).toUpperCase() ?? "A"
 
     return (
         <DropdownMenu modal={false}>
@@ -43,7 +43,7 @@ const UserButton = () => {
                         </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col justify-between items-center text-center">
-                        <p className="text-sm font-medium text-zinc-900">{name ?? "User"}</p>
+                        <p className="text-sm font-medium text-zinc-900">{username ?? "User"}</p>
                         <p className="text-xs text-zinc-500">{email}</p>
                     </div>
                 </div>

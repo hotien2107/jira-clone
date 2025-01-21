@@ -25,7 +25,7 @@ const routes = [
     },
     {
         label: 'Members',
-        href: "/tasks",
+        href: "/members",
         icon: UsersIcon,
         activeIcon: UsersIcon
     },

@@ -18,7 +18,7 @@ type FormType = z.infer<typeof registerSchema>
 const SignUpCard = () => {
     const {mutate, isPending} = useRegister()
     const form = useForm<FormType>({
-        defaultValues: {email: "", password: "", name: ""},
+        defaultValues: {email: "", password: "", username: ""},
         resolver: zodResolver(registerSchema)
     })
 
@@ -44,7 +44,7 @@ const SignUpCard = () => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField
-                            name="name"
+                            name="username"
                             control={form.control}
                             render={({field}) => (
                                 <FormItem>

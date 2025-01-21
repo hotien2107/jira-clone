@@ -12,8 +12,8 @@ export const useLogin = () => {
     return useMutation<ResponseType, Error, RequestType>(
         {
             mutationFn: async (json) => {
-                const response = await client.api.v1.auth.login["$post"]({json});
-                return await response.json()
+                const res = await client.api.v1.auth.login["$post"]({json})
+                return await res.json()
             },
             onSuccess: () => {
                 queryClient.invalidateQueries({queryKey: ["user-info"]})

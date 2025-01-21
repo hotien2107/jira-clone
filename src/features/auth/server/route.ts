@@ -1,11 +1,11 @@
 import {Hono} from "hono";
 import {zValidator} from "@hono/zod-validator";
 import {loginSchema, registerSchema} from "@/features/auth/schemas";
-import {createAdminClient} from "@/lib/appwrite";
-import {ID} from "node-appwrite";
 import {deleteCookie, setCookie} from "hono/cookie";
 import {AUTH_COOKIE_NAME} from "@/features/auth/constants";
 import {sessionMiddleware} from "@/lib/session-middleware";
+import {GeneralResponseType} from "@/features/types";
+import {LoginResponseType, RegisterResponseType} from "@/features/auth/server/types";
 
 
 const app = new Hono()
@@ -13,41 +13,53 @@ const app = new Hono()
         "/login",
         zValidator("json", loginSchema),
         async (c) => {
-            const {email, password} = c.req.valid("json")
-            const {account} = await createAdminClient()
-            const session = await account.createEmailPasswordSession(email, password)
-            setCookie(c, AUTH_COOKIE_NAME, session.secret, {
+            const {username, password} = c.req.valid("json")
+            const res = await fetch("http://localhost:8080/api/jira-clone-api/v1/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({password, username})
+            })
+            const data = await res.json() as GeneralResponseType<LoginResponseType>
+            if (!res.ok || !data.data) {
+                return c.json({
+                    error: data.error,
+                }, data.status_code);
+            }
+            setCookie(c, AUTH_COOKIE_NAME, data.data.access_token, {
                 path: "/",
                 httpOnly: true,
                 secure: true,
                 sameSite: "strict",
                 maxAge: 60 * 60 * 24 * 30
             })
-            return c.json({success: true});
+            return c.json({data: data.data});
         }
     )
     .post("/register",
         zValidator("json", registerSchema),
         async (c) => {
-            const {email, password, name} = c.req.valid("json")
-            const {account} = await createAdminClient()
-            await account.create(ID.unique(), email, password, name)
-            const session = await account.createEmailPasswordSession(email, password)
-            setCookie(c, AUTH_COOKIE_NAME, session.secret, {
-                path: "/",
-                httpOnly: true,
-                secure: true,
-                sameSite: "strict",
-                maxAge: 60 * 60 * 24 * 30
+            const {email, password, username} = c.req.valid("json")
+            const res = await fetch("http://localhost:8080/api/jira-clone-api/v1/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({password, username, email})
             })
-            return c.json({success: true});
+            const data = await res.json() as GeneralResponseType<RegisterResponseType>
+            if (!res.ok || !data.data) {
+                return c.json({
+                    error: data.error,
+                }, data.status_code);
+            }
+            return c.json({data: data.data});
         }
     )
     .post("/logout", sessionMiddleware,
         async (c) => {
-            const account = c.get("account")
             deleteCookie(c, AUTH_COOKIE_NAME)
-            await account.deleteSession("current ")
             return c.json({success: true});
         })
     .get("/user-info", sessionMiddleware,

@@ -1,40 +1,36 @@
 import {createMiddleware} from "hono/factory";
-import {
-    type Account as AccountType,
-    Account,
-    Client,
-    type Databases as DatabaseType,
-    Databases,
-    Models
-} from "node-appwrite";
-import {getCookie} from "hono/cookie";
 import {AUTH_COOKIE_NAME} from "@/features/auth/constants";
+import {GeneralResponseType, User} from "@/features/types";
+import {GetUserInfoResponseType} from "@/features/auth/server/types";
+import {getCookie} from "hono/cookie";
 
 type AdditionContext = {
     Variables: {
-        user: Models.User<Models.Preferences>
-        account: AccountType
-        databases: DatabaseType
+        user: User
     }
 }
 
 export const sessionMiddleware = createMiddleware<AdditionContext>(
     async (c, next) => {
-        const client = new Client()
-            .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT ?? "")
-            .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT ?? "");
-
-        const session = getCookie(c, AUTH_COOKIE_NAME)
-        if (!session) {
+        const token = getCookie(c, AUTH_COOKIE_NAME)
+        console.log(token)
+        if (!token) {
             return c.json({error: "Unauthorized"}, 401)
         }
-        client.setSession(session)
-        const account = new Account(client)
-        const user = await account.get()
-        const databases = new Databases(client)
-        c.set("user", user)
-        c.set("account", account)
-        c.set("databases", databases)
+        const res = await fetch("http://localhost:8080/api/jira-clone-api/v1/auth/user-info", {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            },
+            next: {revalidate: 3000}
+        })
+        const data = await res.json() as GeneralResponseType<GetUserInfoResponseType>
+        if (res.ok && data.data) {
+            c.set("user", {
+                id: data.data.id,
+                username: data.data.username,
+                email: data.data.email
+            })
+        }
         return next()
     }
 )

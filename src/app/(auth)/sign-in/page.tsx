@@ -1,11 +1,26 @@
-import React from 'react';
+"use client"
+import React, {useEffect} from 'react';
 import SignInCard from "@/features/auth/components/sign-in/sign-in-card";
-import {getCurrentUser} from "@/features/auth/action";
-import {redirect} from "next/navigation";
+import {useGetUserInfo} from "@/features/auth/api/use-get-user-info";
+import {Loader} from "lucide-react";
+import {useRouter} from "next/navigation";
 
-const SignInPage = async () => {
-    const user = await getCurrentUser()
-    if (user) redirect("/")
+const SignInPage = () => {
+    const router = useRouter();
+    const {data: user, isLoading: isUserLoading} = useGetUserInfo()
+    useEffect(() => {
+        if (!isUserLoading && user) {
+            router.push("/")
+        }
+    }, [isUserLoading, user])
+    if (isUserLoading) {
+        return (
+            <div className="size-10 rounded-full flex items-center justify-center bg-zinc-100 ">
+                <Loader className="size-4 animate-spin text-muted-foreground"/>
+            </div>
+        )
+    }
+
     return (
         <SignInCard/>
     );

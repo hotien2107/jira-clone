@@ -19,7 +19,7 @@ type formType = z.infer<typeof loginSchema>
 const SignInCard = () => {
     const {mutate, isPending} = useLogin()
     const form = useForm<formType>({
-        defaultValues: {email: "", password: ""},
+        defaultValues: {username: "", password: ""},
         resolver: zodResolver(loginSchema)
     })
 
@@ -41,15 +41,15 @@ const SignInCard = () => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField
-                            name="email"
+                            name="username"
                             control={form.control}
                             render={({field}) => (
                                 <FormItem>
                                     <FormControl>
                                         <Input
                                             {...field}
-                                            type="email"
-                                            placeholder={"Enter email"}
+                                            type="text"
+                                            placeholder={"Enter username"}
                                         />
                                     </FormControl>
                                     <FormMessage/>
