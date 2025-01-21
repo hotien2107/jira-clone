@@ -12,7 +12,7 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import Link from "next/link";
 import {loginSchema} from "@/features/auth/schemas";
-import {useLogin} from "@/features/auth/auth/use-login";
+import {useLogin} from "@/features/auth/api/use-login";
 
 type formType = z.infer<typeof loginSchema>
 

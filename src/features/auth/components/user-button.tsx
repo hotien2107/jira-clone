@@ -1,12 +1,12 @@
 "use client"
 
 import React from 'react';
-import {useGetUserInfo} from "@/features/auth/auth/use-get-user-info";
+import {useGetUserInfo} from "@/features/auth/api/use-get-user-info";
 import {Loader, LogOut} from "lucide-react";
 import {Avatar, AvatarFallback} from "@/components/ui/avatar";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import DottedSeparator from "@/components/dotted-separator";
-import {useLogout} from "@/features/auth/auth/use-logout";
+import {useLogout} from "@/features/auth/api/use-logout";
 
 
 const UserButton = () => {
