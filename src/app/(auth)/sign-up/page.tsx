@@ -1,4 +1,3 @@
-"use client"
 import React from 'react';
 import SignUpCard from "@/features/auth/components/sign-up/sign-up-card";
 

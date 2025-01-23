@@ -13,7 +13,6 @@ type AdditionContext = {
 export const sessionMiddleware = createMiddleware<AdditionContext>(
     async (c, next) => {
         const token = getCookie(c, AUTH_COOKIE_NAME)
-        console.log(token)
         if (!token) {
             return c.json({error: "Unauthorized"}, 401)
         }
@@ -21,7 +20,6 @@ export const sessionMiddleware = createMiddleware<AdditionContext>(
             headers: {
                 "Authorization": `Bearer ${token}`
             },
-            next: {revalidate: 3000}
         })
         const data = await res.json() as GeneralResponseType<GetUserInfoResponseType>
         if (res.ok && data.data) {

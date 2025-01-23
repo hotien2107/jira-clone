@@ -12,7 +12,7 @@ const SignInPage = () => {
         if (!isUserLoading && user) {
             router.push("/")
         }
-    }, [isUserLoading, user])
+    }, [isUserLoading, user, router])
     if (isUserLoading) {
         return (
             <div className="size-10 rounded-full flex items-center justify-center bg-zinc-100 ">
@@ -20,7 +20,6 @@ const SignInPage = () => {
             </div>
         )
     }
-
     return (
         <SignInCard/>
     );

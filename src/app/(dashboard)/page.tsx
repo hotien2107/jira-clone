@@ -11,7 +11,7 @@ export default function DashboardPage() {
         if (!isPending && !user) {
             router.push("/sign-in")
         }
-    }, [isPending, user])
+    }, [isPending, user, router])
     return (
         <div className="bg-zinc-500 p-4">
             <CreateWorkspaceForm/>

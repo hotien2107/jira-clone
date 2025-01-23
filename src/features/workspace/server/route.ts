@@ -2,8 +2,8 @@ import {Hono} from "hono";
 import {zValidator} from "@hono/zod-validator";
 import {createWorkspaceSchema} from "@/features/workspace/schema";
 import {sessionMiddleware} from "@/lib/session-middleware";
-import {DATABASE_ID, WORKSPACE_ID} from "@/config";
-import {ID} from "node-appwrite";
+import {GeneralResponseType} from "@/features/types";
+import {RegisterResponseType} from "@/features/auth/server/types";
 
 const app = new Hono()
     .post(
@@ -11,19 +11,21 @@ const app = new Hono()
         zValidator("json", createWorkspaceSchema),
         sessionMiddleware,
         async (c) => {
-            const databases = c.get("databases")
-            const user = c.get("user")
             const {name} = c.req.valid("json")
-            const workspace = await databases.createDocument(
-                DATABASE_ID,
-                WORKSPACE_ID,
-                ID.unique(),
-                {
-                    name: name,
-                    user_id: user.$id
-                }
-            )
-            return c.json({data: workspace})
+            const res = await fetch("http://localhost:8080/api/jira-clone-api/v1/workspaces", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({name})
+            })
+            const data = await res.json() as GeneralResponseType<RegisterResponseType>
+            if (!res.ok || !data.data) {
+                return c.json({
+                    error: data.error,
+                }, data.status_code);
+            }
+            return c.json({data: data.data});
         }
     )
 
