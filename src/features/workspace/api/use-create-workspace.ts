@@ -13,9 +13,9 @@ export const useCreateWorkspace = () => {
 
     return useMutation<ResponseType, Error, RequestType>(
         {
-            mutationFn: async (json) => {
+            mutationFn: async (form) => {
                 try {
-                    const response = await client.api.v1.workspace["$post"](json);
+                    const response = await client.api.v1.workspace["$post"](form);
                     if (!response.ok) {
                         throw new Error("Network response was not ok");
                     }

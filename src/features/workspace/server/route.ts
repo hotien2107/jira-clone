@@ -8,16 +8,21 @@ import {RegisterResponseType} from "@/features/auth/server/types";
 const app = new Hono()
     .post(
         "/",
-        zValidator("json", createWorkspaceSchema),
+        zValidator("form", createWorkspaceSchema),
         sessionMiddleware,
         async (c) => {
-            const {name} = c.req.valid("json")
+            const {name, image} = c.req.valid("form")
+            const formData = new FormData();
+            formData.set("name", name)
+            if (image) {
+                formData.set("image", image)
+            }
             const res = await fetch("http://localhost:8080/api/jira-clone-api/v1/workspaces", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${c.get("token")}`
                 },
-                body: JSON.stringify({name})
+                body: formData
             })
             const data = await res.json() as GeneralResponseType<RegisterResponseType>
             if (!res.ok || !data.data) {
